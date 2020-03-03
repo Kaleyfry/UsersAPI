@@ -23,10 +23,10 @@ public class User {
 		@Column(name="id")
 		private Long id;
 		
-		@Column(name="First_Name")
+		@Column(name="first_Name")
 		private String first_name;
 
-		@Column(name="Last_Name")
+		@Column(name="last_Name")
 		private String last_name;
 		
 		@Column(name="state")
