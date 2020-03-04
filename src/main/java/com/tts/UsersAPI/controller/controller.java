@@ -28,12 +28,31 @@ public class controller {
 	private Repository repository;
 	
 	@GetMapping("/users")
-    public List<User> getUsers(@RequestParam(value="state", required=false) String state){
-		if (state != null) {
-            return (List<User>) repository.findByState(state);
-        }
-		return (List<User>) repository.findAll();
-    }
+    public ResponseEntity<List<User>> getUsers(@PathVariable(value="id")  Long id,
+    											@RequestParam(value="first_name", required=false) String first_name,
+    											@RequestParam(value="last_name", required=false) String last_name,
+    											@RequestParam(value="state", required=false) String state) {
+		if (id == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} 
+		List<User> users;
+		if (state!=null) {
+			users = repository.findByState(state);
+		}
+		else {
+			users = (List<User>) repository.findAll();
+		}
+		return new ResponseEntity<List<User>>(HttpStatus.OK);
+	}
+		
+	
+//	@GetMapping("/users")
+//    public List<User> getUsers(@RequestParam(value="state", required=false) String state){
+//		if (state != null) {
+//            return (List<User>) repository.findByState(state);
+//        }
+//		return (List<User>) repository.findAll();
+//    }
 	
 	@GetMapping("/users/{id}")
     public Optional<User> getUserById(@PathVariable(value="id") Long id){
