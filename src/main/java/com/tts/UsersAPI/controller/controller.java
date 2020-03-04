@@ -3,7 +3,12 @@ package com.tts.UsersAPI.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,14 +41,29 @@ public class controller {
     }
 	
 	 @PostMapping("/users")
-		public void createUser(@RequestBody User user){
-		    repository.save(user);
+		public ResponseEntity<Void> createUser(@RequestBody @Valid User user,
+												BindingResult bindingResult){
+		 if (bindingResult.hasErrors())  {
+			 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		 }
+		 repository.save(user);
+		    return new ResponseEntity<>(HttpStatus.CREATED);
+		    
 		}
 	 
 	 @PutMapping("/users/{id}")
-		public void createUser(@PathVariable(value="id") Long id, @RequestBody User user){
-		    repository.save(user);
-		}
+		public ResponseEntity<Void> updateUser(@PathVariable(value="id") Long id, @RequestBody @Valid User user,
+																		BindingResult bindingResult){
+		 
+		 if (id == null) {
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		 }
+		 if (bindingResult.hasErrors()) {
+			 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		 }
+		 repository.save(user);
+		 return new ResponseEntity<>(HttpStatus.CREATED);
+			}
 	 
 	 @DeleteMapping("/users/{id}")
 		public void createUser(@PathVariable(value="id") Long id){

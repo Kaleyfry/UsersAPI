@@ -9,4 +9,5 @@ import com.tts.UsersAPI.model.User;
 public interface Repository extends CrudRepository<User, Long> {
 
 	List<User> findByState(String state);
+	List<User> getUserById(String user);
 }
