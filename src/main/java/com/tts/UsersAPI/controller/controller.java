@@ -39,9 +39,7 @@ public class controller {
 		if (state!=null) {
 			users = repository.findByState(state);
 		}
-		else {
-			users = (List<User>) repository.findAll();
-		}
+		users = (List<User>) repository.findAll();
 		return new ResponseEntity<List<User>>(HttpStatus.OK);
 	}
 		
@@ -54,10 +52,22 @@ public class controller {
 //		return (List<User>) repository.findAll();
 //    }
 	
+	
 	@GetMapping("/users/{id}")
-    public Optional<User> getUserById(@PathVariable(value="id") Long id){
-        return repository.findById(id);
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable(value="id") Long id){
+		Optional<User> user = repository.findById(id);
+		List<User> users;
+		if (!user.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+		repository.findById(id);
+		return new ResponseEntity<Optional<User>>(HttpStatus.OK);
     }
+	
+//	@GetMapping("/users/{id}")
+//    public Optional<User> getUserById(@PathVariable(value="id") Long id){
+//        return repository.findById(id);
+//    }
 	
 	 @PostMapping("/users")
 		public ResponseEntity<Void> createUser(@RequestBody @Valid User user,
@@ -85,9 +95,19 @@ public class controller {
 			}
 	 
 	 @DeleteMapping("/users/{id}")
-		public void createUser(@PathVariable(value="id") Long id){
-		    repository.deleteById(id);
+		public ResponseEntity<Void> createUser(@PathVariable(value="id") Long id){
+		 if (id == null) {
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		 }
+		 repository.deleteById(id);
+		 return new ResponseEntity<>(HttpStatus.OK);
 		}
+	 
+//	 @DeleteMapping("/users/{id}")
+//		public void createUser(@PathVariable(value="id") Long id){
+//		    repository.deleteById(id);
+//		}
+	 
 	 
 
 }
